@@ -1,6 +1,10 @@
 {
   "type": "sqlite",
-  "database": "tmp/sqlite.db",
-  "entities": ["dist/**/*.entity{.ts,.js}"],
-  "synchronize": true
+  "database": "src/database/sqlite.db",
+  "synchronize": true,
+  "entities": ["dist/modules/**/*.entity.{ts,js}"],
+  "migrations": ["dist/migrations/**/*.{ts,js}"],
+  "cli": {
+    "migrationsDir": "dist/migrations"
+  }
 }
