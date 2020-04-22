@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
+import { TypeOrmModule } from '@nestjs/typeorm'
+
 import { AppModule } from './../src/app.module'
 
 describe('AppController (e2e)', () => {
@@ -8,7 +10,7 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [TypeOrmModule.forRoot(), AppModule],
     }).compile()
 
     app = moduleFixture.createNestApplication()
