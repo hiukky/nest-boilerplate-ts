@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { Connection } from 'typeorm'
+
+import { AppController } from './app.controller'
 
 import { UserModule } from './modules/user/user.module'
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forRoot()],
+  imports: [TypeOrmModule.forRoot(), UserModule],
+  controllers: [AppController],
 })
 export class AppModule {}
