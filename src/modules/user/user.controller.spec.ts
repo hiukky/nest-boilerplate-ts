@@ -15,11 +15,13 @@ describe('UserController', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({ envFilePath: ['.env', '.env.test'] }),
+        ConfigModule.forRoot({
+          envFilePath: ['.env', '.env.test'],
+        }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
-          useFactory: OrmConfig.config,
+          useClass: OrmConfig,
         }),
         TypeOrmModule.forFeature([UserEntity]),
       ],

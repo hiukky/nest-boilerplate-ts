@@ -1,22 +1,20 @@
 import { ConfigService } from '@nestjs/config'
-import {
-  TypeOrmModuleAsyncOptions,
-  TypeOrmModuleOptions,
-} from '@nestjs/typeorm'
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
+import { Injectable } from '@nestjs/common'
 
-export class OrmConfig {
-  static get test(): TypeOrmModuleOptions {
+@Injectable()
+export class OrmConfig implements TypeOrmOptionsFactory {
+  constructor(private readonly configService: ConfigService) {}
+
+  get test(): TypeOrmModuleOptions {
     return {
       migrationsRun: true,
       entities: [`${process.cwd()}/src/modules/**/*.entity.{ts,js}`],
       migrations: [`${process.cwd()}/src/migrations/**/*.{ts,js}`],
-      cli: {
-        migrationsDir: `${process.cwd()}/src/migrations`,
-      },
     }
   }
 
-  static get development(): TypeOrmModuleOptions {
+  get default(): TypeOrmModuleOptions {
     return {
       entities: [`${process.cwd()}/dist/src/modules/**/*.entity.{ts,js}`],
       migrations: [`${process.cwd()}/dist/src/migrations/**/*.{ts,js}`],
@@ -26,22 +24,18 @@ export class OrmConfig {
     }
   }
 
-  static get production(): TypeOrmModuleOptions {
-    return {
-      entities: [`${process.cwd()}/dist/src/modules/**/*.entity.{ts,js}`],
-      migrations: [`${process.cwd()}/dist/src/migrations/**/*.{ts,js}`],
-    }
-  }
+  async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
+    let baseConfig =
+      this.configService.get('NODE_ENV') === 'test' ? 'test' : 'default'
 
-  static config(configService: ConfigService): TypeOrmModuleAsyncOptions {
     return {
-      ...OrmConfig[configService.get('NODE_ENV')],
-      type: configService.get('DB_CLIENT', 'sqlite') as any,
-      host: configService.get('DB_HOST', 'localhost'),
-      port: +configService.get('DB_PORT', 5432),
-      username: configService.get('DB_USER', 'sqlite'),
-      password: configService.get('DB_PASS', 'sqlite'),
-      database: configService.get('DB_NAME', 'sqlite'),
+      ...this[baseConfig],
+      type: this.configService.get('DB_CLIENT', 'sqlite') as any,
+      host: this.configService.get('DB_HOST', 'localhost'),
+      port: +this.configService.get('DB_PORT', 5432),
+      username: this.configService.get('DB_USER', 'sqlite'),
+      password: this.configService.get('DB_PASS', 'sqlite'),
+      database: this.configService.get('DB_NAME', 'sqlite'),
     }
   }
 }

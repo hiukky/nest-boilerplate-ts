@@ -10,7 +10,6 @@ import { UserModule } from './modules/user/user.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
       envFilePath: ['.env', '.env.production', '.env.development'],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
@@ -21,7 +20,7 @@ import { UserModule } from './modules/user/user.module'
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: OrmConfig.config,
+      useClass: OrmConfig,
     }),
     UserModule,
   ],

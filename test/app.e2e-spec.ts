@@ -14,11 +14,13 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({ envFilePath: ['.env', '.env.test'] }),
+        ConfigModule.forRoot({
+          envFilePath: ['.env', '.env.test'],
+        }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
-          useFactory: OrmConfig.config,
+          useClass: OrmConfig,
         }),
         AppModule,
       ],
