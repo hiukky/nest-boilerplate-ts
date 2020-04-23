@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+
+import { OrmConfig } from '../src/configs'
 
 import { AppModule } from './../src/app.module'
 
@@ -10,7 +13,15 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(), AppModule],
+      imports: [
+        ConfigModule.forRoot({ envFilePath: ['.env', '.env.test'] }),
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: OrmConfig.config,
+        }),
+        AppModule,
+      ],
     }).compile()
 
     app = moduleFixture.createNestApplication()

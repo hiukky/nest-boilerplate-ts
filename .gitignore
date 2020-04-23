@@ -35,3 +35,7 @@ lerna-debug.log*
 
 # Others
 database
+.env
+.env.development
+.env.test
+.env.production

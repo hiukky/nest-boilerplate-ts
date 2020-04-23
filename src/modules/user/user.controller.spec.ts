@@ -1,5 +1,8 @@
 import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+
+import { OrmConfig } from '../../configs'
 
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
@@ -12,7 +15,12 @@ describe('UserController', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot(),
+        ConfigModule.forRoot({ envFilePath: ['.env', '.env.test'] }),
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: OrmConfig.config,
+        }),
         TypeOrmModule.forFeature([UserEntity]),
       ],
       providers: [UserService],
