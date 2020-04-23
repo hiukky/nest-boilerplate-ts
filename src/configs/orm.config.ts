@@ -16,8 +16,8 @@ export class OrmConfig implements TypeOrmOptionsFactory {
 
   get default(): TypeOrmModuleOptions {
     return {
-      entities: [`${process.cwd()}/dist/src/modules/**/*.entity.{ts,js}`],
-      migrations: [`${process.cwd()}/dist/src/migrations/**/*.{ts,js}`],
+      entities: [`${process.cwd()}/dist/modules/**/*.entity.{ts,js}`],
+      migrations: [`${process.cwd()}/dist/migrations/**/*.{ts,js}`],
       cli: {
         migrationsDir: `${process.cwd()}/src/migrations`,
       },
