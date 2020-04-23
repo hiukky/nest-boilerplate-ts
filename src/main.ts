@@ -1,4 +1,5 @@
 import * as helmet from 'helmet'
+import * as rateLimit from 'express-rate-limit'
 
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
@@ -9,8 +10,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   const configService = app.get(ConfigService)
-
-  app.use(helmet())
 
   app.enableCors({
     origin: true,
@@ -26,6 +25,15 @@ async function bootstrap() {
     credentials: true,
     maxAge: 90,
   })
+
+  app.use(helmet())
+
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+    }),
+  )
 
   await app.listen(
     configService.get('PORT', 3333),
