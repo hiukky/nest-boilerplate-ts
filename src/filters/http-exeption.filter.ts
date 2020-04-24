@@ -23,6 +23,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR
 
+    delete error['statusCode']
+
     response.status(status).json({
       status: status,
       path: request.url,
