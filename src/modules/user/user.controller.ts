@@ -1,5 +1,8 @@
+import { Response } from 'express'
+
 import {
   Controller,
+  Res,
   Get,
   Post,
   Put,
@@ -7,6 +10,7 @@ import {
   Param,
   Delete,
   UsePipes,
+  NotFoundException,
 } from '@nestjs/common'
 
 import { ValidationPipe } from '../../pipes'
@@ -31,8 +35,14 @@ export class UserController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async store(@Body() userDto: UserDto): Promise<UserEntity> {
-    return this.userService.create(userDto)
+  async store(@Body() userDto: UserDto, @Res() res: Response): Promise<object> {
+    let user = await this.userService.create(userDto)
+
+    return res.status(201).json({
+      status: 201,
+      message: 'Successful registered user.',
+      user,
+    })
   }
 
   @Put(':id')
@@ -40,12 +50,33 @@ export class UserController {
   async update(
     @Param() id: number,
     @Body() userDto: UserDto,
-  ): Promise<UserEntity> {
-    return this.userService.update(id, userDto)
+    @Res() res: Response,
+  ): Promise<object> {
+    let user = await this.userService.findOne(id)
+
+    if (!user) throw new NotFoundException({ message: 'Unregistered user.' })
+
+    user = await this.userService.update(id, userDto)
+
+    return res.status(200).json({
+      status: 200,
+      message: 'User updated successfully.',
+      user,
+    })
   }
 
   @Delete(':id')
-  async remove(@Param() id: number): Promise<number> {
-    return await this.userService.delete(id)
+  async remove(@Param() id: number, @Res() res: Response): Promise<object> {
+    let user = await this.userService.findOne(id)
+
+    if (!user) throw new NotFoundException({ message: 'Unregistered user.' })
+
+    await this.userService.delete(id)
+
+    return res.status(200).json({
+      status: 200,
+      message: 'User successfully deleted.',
+      id: user.id,
+    })
   }
 }
