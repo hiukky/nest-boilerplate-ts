@@ -4,6 +4,7 @@
     "type": "sqlite",
     "driver": "sqlite3",
     "database": "database/development.db",
+    "migrationsRun": true,
     "entities": ["dist/src/modules/**/*.entity.{ts,js}"],
     "migrations": ["dist/src/migrations/**/*.{ts,js}"],
     "cli": {
