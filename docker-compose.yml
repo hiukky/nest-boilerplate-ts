@@ -7,8 +7,8 @@ services:
       context: .
       target: development
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - .:/nest
+      - /nest/node_modules
     ports:
       - ${PORT}:${PORT}
     command: yarn start:dev
