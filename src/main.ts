@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './filters/http-exeption.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -34,6 +35,8 @@ async function bootstrap() {
       max: 100,
     }),
   )
+
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   await app.listen(
     configService.get('PORT', 3333),
