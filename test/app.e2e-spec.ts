@@ -1,10 +1,8 @@
+import * as request from 'supertest'
+
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-
-import { OrmConfig } from '../src/configs'
+import { ConfigModule } from '@nestjs/config'
 
 import { AppModule } from './../src/app.module'
 
@@ -16,11 +14,6 @@ describe('AppController (e2e)', () => {
       imports: [
         ConfigModule.forRoot({
           envFilePath: ['.env', '.env.test'],
-        }),
-        TypeOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useClass: OrmConfig,
         }),
         AppModule,
       ],
