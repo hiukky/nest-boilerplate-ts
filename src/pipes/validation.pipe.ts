@@ -20,11 +20,8 @@ export class ValidationPipe implements PipeTransform<any> {
 
     if (error) {
       throw new UnprocessableEntityException({
-        status: 422,
-        error: {
-          message: Object.values(error.constraints)[0] || 'Validation failed',
-          property: error.property,
-        },
+        message: Object.values(error.constraints)[0] || 'Validation failed',
+        property: error.property,
       })
     }
 
