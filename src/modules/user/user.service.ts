@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Injectable } from '@nestjs/common'
 
 import { UserEntity } from './user.entity'
-import { UserDto } from './dto/user.dto'
+import { CreateUserDto } from './dto/create-user.dto'
 
 @Injectable()
 export class UserService {
@@ -20,12 +20,12 @@ export class UserService {
     return await this.userRepository.find()
   }
 
-  async create(userDto: UserDto): Promise<UserEntity> {
-    return await this.userRepository.create(userDto).save()
+  async create(input: CreateUserDto): Promise<UserEntity> {
+    return await this.userRepository.create(input).save()
   }
 
-  async update(id: number, userDto: UserDto): Promise<UserEntity> {
-    await this.userRepository.update(id, userDto)
+  async update(id: number, input: CreateUserDto): Promise<UserEntity> {
+    await this.userRepository.update(id, { ...input })
     return await this.userRepository.findOne(id)
   }
 

@@ -4,8 +4,9 @@ import * as rateLimit from 'express-rate-limit'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 
+import { ValidationPipe } from './pipes'
+
 import { AppModule } from './app.module'
-import { HttpExceptionFilter } from './filters'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -36,7 +37,7 @@ async function bootstrap() {
     }),
   )
 
-  app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalPipes(new ValidationPipe())
 
   await app.listen(
     configService.get('PORT', 3333),

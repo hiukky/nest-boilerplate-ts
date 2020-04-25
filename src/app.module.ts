@@ -1,12 +1,15 @@
 import * as Joi from '@hapi/joi'
+import { join } from 'path'
 
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { GraphQLModule } from '@nestjs/graphql'
 
 import { OrmConfig } from './configs'
 
-import { UserModule } from './modules/user/user.module'
+import { UserModule } from './modules'
+import { GraphQLError } from 'graphql'
 
 @Module({
   imports: [
@@ -17,6 +20,12 @@ import { UserModule } from './modules/user/user.module'
           .valid('development', 'production', 'test')
           .default('development'),
       }),
+    }),
+    GraphQLModule.forRoot({
+      typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/graphql.ts'),
+      },
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

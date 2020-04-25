@@ -1,6 +1,10 @@
 import { IsString, IsEmail } from 'class-validator'
+import { InputType } from '@nestjs/graphql'
 
-export class UserDto {
+import { CreateUserInput } from '../../../graphql'
+
+@InputType()
+export class CreateUserDto implements CreateUserInput {
   @IsString({ message: 'The name field is required.' })
   name: string
 
